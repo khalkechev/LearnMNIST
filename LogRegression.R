@@ -152,7 +152,7 @@ OneVsAllLogRegressionTrain <- function(x, y, numLabels, stochastic=FALSE,
   return (allTheta)
 }
 
-MultiLabelPredictProba <- function(allTheta, x) {
+MultiLabelLogRegressionPredictProba <- function(allTheta, x) {
   # Predicts probability of every label, using marix of parameters allTheta
   # Args:
   #   allTheta: matrix of parameters theta for every classifier
