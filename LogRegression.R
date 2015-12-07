@@ -68,7 +68,7 @@ LogRegressionTrain <- function(x, y, stochastic=FALSE, batchSize=300,
     if (abs(costResult$error - previousCostResult$error) < kThreshold) {
       break
     }
-    if (previousCostResult$error - costResult$error < 0) {
+    if (previousCostResult$error < costResult$error) {
       learningRate <- learningRate / 1.5
     }
     if (verbouse && iter %% 1000 == 0) {
