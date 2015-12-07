@@ -52,15 +52,15 @@ LogRegressionTrain <- function(x, y, stochastic=FALSE, batchSize=300,
   x <- cbind(bias, x)
   theta <- matrix(0.0, ncol(x), 1)
   if (!stochastic) {
-    batchSize = nrow(x)
+    batchSize <- nrow(x)
   }
   indices <- sample(1:nrow(x), batchSize)
   previousCostResult <- LogRegressionCost(theta, x[indices,],
                                           as.matrix(y[indices]),
                                           regularizationRate)
-  costResult = previousCostResult
+  costResult <- previousCostResult
   for(iter in 1:maxNumIters) {
-    step = 0.8 * previousCostResult$gradient + 0.2 * costResult$gradient
+    step <- 0.8 * previousCostResult$gradient + 0.2 * costResult$gradient
     theta <- theta - learningRate * step
     indices <- sample(1:nrow(x), batchSize)
     costResult <- LogRegressionCost(theta, x[indices,], as.matrix(y[indices]),
@@ -72,7 +72,7 @@ LogRegressionTrain <- function(x, y, stochastic=FALSE, batchSize=300,
       learningRate <- learningRate / 1.5
     }
     if (verbouse && iter %% 1000 == 0) {
-      message = paste(c("Current error:", costResult$error), collapse = " ")
+      message <- paste(c("Current error:", costResult$error), collapse=" ")
       write(message, stderr())
     }
     previousCostResult <- costResult
@@ -138,8 +138,8 @@ OneVsAllLogRegressionTrain <- function(x, y, numLabels, stochastic=FALSE,
   #   matrix of parameters theta for every classifier
   allTheta <- matrix(0.0, numLabels, ncol(x) + 1)
   for (lableCounter in 1:numLabels) {
-    message = paste(c("Training classifier number", lableCounter),
-                    collapse = " ")
+    message <- paste(c("Training classifier number", lableCounter),
+                    collapse=" ")
     write(message, stderr())
     allTheta[lableCounter,] <- LogRegressionTrain(x, (y == lableCounter),
                                                   stochastic, batchSize,
