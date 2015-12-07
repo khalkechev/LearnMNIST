@@ -138,9 +138,11 @@ OneVsAllLogRegressionTrain <- function(x, y, numLabels, stochastic=FALSE,
   #   matrix of parameters theta for every classifier
   allTheta <- matrix(0.0, numLabels, ncol(x) + 1)
   for (lableCounter in 1:numLabels) {
-    message <- paste(c("Training classifier number", lableCounter),
-                    collapse=" ")
-    write(message, stderr())
+    if (verbouse) {
+      message <- paste(c("Training classifier number", lableCounter),
+                       collapse=" ")
+      write(message, stderr())
+    }
     allTheta[lableCounter,] <- LogRegressionTrain(x, (y == lableCounter),
                                                   stochastic, batchSize,
                                                   regularizationRate,
