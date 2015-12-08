@@ -66,7 +66,7 @@ print(sum(predictedLabels == testLabels) / length(testLabels))
 
 #calculate the following error metric for each class obtained on the test data:
 #Recall, precision, specificity, F-measure, FDR and ROC for each class separately. Use a package for ROC.
-testMetrics <- CalculateAllMetrics(10, trainLabels, predictedLabels)
+testMetrics <- CalculateAllMetrics(10, testLabels, predictedLabels)
 print("Class 0, Class 1, Class 2, Class 3, Class 4, Class 5, Class 6, Class 7, Class 8, Class 9")
 PrintMetrics(testMetrics$recalls,
              testMetrics$precisions,
