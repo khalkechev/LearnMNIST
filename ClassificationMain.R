@@ -77,5 +77,5 @@ PrintMetrics(testMetrics$recalls,
 predictedProbabilities <- MultiLabelLogRegressionPredictProba(classifier, testData)
 
 for (label in 0:9) {
-  PlotROC(label, (trainLabels == label), as.matrix(predictedProbabilities[label + 1, ]))
+  PlotROC(label, (testLabels == label), as.matrix(predictedProbabilities[label + 1, ]))
 }
