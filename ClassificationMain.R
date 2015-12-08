@@ -1,6 +1,8 @@
 # This sciprt file contains a frame for learning handwritten digitals from the MNIST dataset
+library(ROCR)
 source("load_data.R")
 source("LogRegression.R")
+source("Metrics.R")
 
 # load training data from files
 data <- loadMNISTData("data/train-images.idx3-ubyte", "data/train-labels.idx1-ubyte")
@@ -18,16 +20,27 @@ print(dim(trainLabels))
 #print("Class label:"); print(trainLabels[n])
 
 # train a model
-classifier <- OneVsAllLogRegressionTrain(trainData, trainLabels, numLabels=10, stochastic=TRUE, batchSize=1000, regularizationRate=0.01, learningRate = 1.0)
+classifier <- MultiLabelLogRegressionTrain(trainData, trainLabels, numLabels=10,
+                                           stochastic=TRUE, batchSize=1000,
+                                           regularizationRate=0.01, learningRate = 1.0,
+                                           maxNumIters=10000, momentum=0.1)
+
 predictedLabels <- MultiLabelLogRegressionPredict(classifier, trainData)
 
 #calculate accuracy on training data
 print("accuracy on training data:")
-print(sum(predictedLabels == trainLabels)/length(trainLabels))
+print(sum(predictedLabels == trainLabels) / length(trainLabels))
 
 #calculate the following error metric for each class obtained on the train data:
-#Recall, precision, specificity, F-measure, FDR and ROC for each class separately. Use a package for ROC. 
+#Recall, precision, specificity, F-measure, FDR and ROC for each class separately. Use a package for ROC.
 
+metrics <- CalculateAllMetrics(10, trainLabels, predictedLabels)
+print("Class 0, Class 1, Class 2, Class 3, Class 4, Class 5, Class 6, Class 7, Class 8, Class 9")
+PrintMetrics(metrics$recalls,
+             metrics$precisions,
+             metrics$specificities,
+             metrics$fMeasures,
+             metrics$falseDiscoveryRates)
 
 # test the model
 data <- loadMNISTData("data/t10k-images.idx3-ubyte", "data/t10k-labels.idx1-ubyte")
@@ -43,7 +56,14 @@ predictedLabels <- MultiLabelLogRegressionPredict(classifier, testData)
 
 #calculate accuracy
 print("accuracy on test data:")
-print(sum(predictedLabels == testLabels)/length(testLabels))
+print(sum(predictedLabels == testLabels) / length(testLabels))
 
 #calculate the following error metric for each class obtained on the test data:
 #Recall, precision, specificity, F-measure, FDR and ROC for each class separately. Use a package for ROC.
+testMetrics <- CalculateAllMetrics(10, trainLabels, predictedLabels)
+print("Class 0, Class 1, Class 2, Class 3, Class 4, Class 5, Class 6, Class 7, Class 8, Class 9")
+PrintMetrics(testMetrics$recalls,
+             testMetrics$precisions,
+             testMetrics$specificities,
+             testMetrics$fMeasures,
+             testMetrics$falseDiscoveryRates)

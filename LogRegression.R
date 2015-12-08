@@ -111,7 +111,7 @@ MultiLabelLogRegressionTrain <- function(x, y, numLabels, stochastic=FALSE,
                        collapse=" ")
       write(message, stderr())
     }
-    allTheta[lableCounter,] <- LogRegressionTrain(x, (y == lableCounter),
+    allTheta[lableCounter,] <- LogRegressionTrain(x, (y == (lableCounter - 1)),
                                                   stochastic, batchSize,
                                                   regularizationRate,
                                                   learningRate, maxNumIters,
@@ -145,7 +145,7 @@ LogRegressionPredict <- function(theta, x, threshold=0.5) {
   #
   # Returns:
   #   vector of labels
-  probabilities <- LogRegressionPredictProba(theta, x) # проще написать можно?
+  probabilities <- LogRegressionPredictProba(theta, x)
   labels <- rep(0, nrow(x))
   for (objCounter in 1:nrow(x)) {
     if (probabilities[objCounter] > threshold) {
@@ -180,7 +180,7 @@ MultiLabelLogRegressionPredict <- function(allTheta, x) {
   # Returns:
   #   vector of labels
   probabilities <- MultiLabelPredictProba(allTheta, x)
-  labels <- max.col(t(probabilities))
+  labels <- max.col(t(probabilities)) - 1
   return (labels)
 }
 
