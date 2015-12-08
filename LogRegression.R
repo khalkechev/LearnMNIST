@@ -83,10 +83,10 @@ LogRegressionTrain <- function(x, y, stochastic=FALSE, batchSize=300,
   return(theta)
 }
 
-OneVsAllLogRegressionTrain <- function(x, y, numLabels, stochastic=FALSE,
-                                       batchSize=300, regularizationRate=0.0,
-                                       learningRate=1.0, maxNumIters=1000,
-                                       momentum=0.0, verbose=TRUE) {
+MultiLabelLogRegressionTrain <- function(x, y, numLabels, stochastic=FALSE,
+                                         batchSize=300, regularizationRate=0.0,
+                                         learningRate=1.0, maxNumIters=1000,
+                                         momentum=0.0, verbose=TRUE) {
   # Trains multiple logistic regression classifiers and returns numLabels
   # classifiers in a matrix allTheta, where the i-th row of allTheta
   # corresponds to the classifier for label i
