@@ -42,6 +42,12 @@ PrintMetrics(metrics$recalls,
              metrics$fMeasures,
              metrics$falseDiscoveryRates)
 
+predictedProbabilities <- MultiLabelLogRegressionPredictProba(classifier, trainData)
+
+for (label in 0:9){
+  PlotROC(label, (trainLabels == label), predictedProbabilities[label + 1, ])
+}
+
 # test the model
 data <- loadMNISTData("data/t10k-images.idx3-ubyte", "data/t10k-labels.idx1-ubyte")
 testLabels <- data$labels
@@ -67,3 +73,9 @@ PrintMetrics(testMetrics$recalls,
              testMetrics$specificities,
              testMetrics$fMeasures,
              testMetrics$falseDiscoveryRates)
+
+predictedProbabilities <- MultiLabelLogRegressionPredictProba(classifier, testData)
+
+for (label in 0:9){
+  PlotROC(label, (trainLabels == label), predictedProbabilities[label + 1, ])
+}
