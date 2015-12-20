@@ -20,10 +20,8 @@ LogRegressionCost <- function(theta, x, y, regularizationRate=0.0) {
   error <- error - t(y) %*% log(sigmoid + kEpsilon)
   error <- error + regularizationRate * (t(theta) %*% theta - theta[1]^2) / 2.0
   error <- error / nrow(x)
-  
-  tmpTheta <- theta
-  tmpTheta[1] <- 0
-  gradient <- (t(x) %*% (sigmoid - y) + regularizationRate * tmpTheta)
+
+  gradient <- (t(x) %*% (sigmoid - y) + regularizationRate * c(0, theta[-1]))
   gradient <- gradient / nrow(x)
   
   result <- list("error" = error, "gradient" = gradient)
@@ -59,10 +57,10 @@ LogRegressionTrain <- function(x, y, stochastic=FALSE, batchSize=300,
   indices <- sample(1:nrow(x), batchSize)
   previousCost <- LogRegressionCost(theta, x[indices,], as.matrix(y[indices]),
                                     regularizationRate)
-  previosStep <- previousCost$gradient
+  previousStep <- previousCost$gradient
   cost <- previousCost
   for(iter in 1:maxNumIters) {
-    step <- - (momentum * previosStep + (1 - momentum) * cost$gradient)
+    step <- - (momentum * previousStep + (1 - momentum) * cost$gradient)
     theta <- theta + learningRate * step
     indices <- sample(1:nrow(x), batchSize)
     cost <- LogRegressionCost(theta, x[indices,], as.matrix(y[indices]),
@@ -78,7 +76,7 @@ LogRegressionTrain <- function(x, y, stochastic=FALSE, batchSize=300,
       write(message, stderr())
     }
     previousCost <- cost
-    previosStep <- step
+    previousStep <- step
   }
   return(theta)
 }
@@ -179,7 +177,7 @@ MultiLabelLogRegressionPredict <- function(allTheta, x) {
   #
   # Returns:
   #   vector of labels
-  probabilities <- MultiLabelPredictProba(allTheta, x)
+  probabilities <- MultiLabelLogRegressionPredictProba(allTheta, x)
   labels <- max.col(t(probabilities)) - 1
   return (labels)
 }
